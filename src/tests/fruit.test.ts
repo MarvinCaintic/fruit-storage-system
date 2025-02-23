@@ -36,7 +36,7 @@ describe('Fruit Storage System', () => {
         it('should create a fruit successfully', async () => {
             const fruit = fruitFactory.createFruit('lemon', 'this is a lemon', 10);
             const savedFruit = await fruitRepository.save(fruit);
-            expect(savedFruit.name).toBe('lemon');
+            expect(savedFruit.getName()).toBe('lemon');
         });
 
         it('should fail with long description', async () => {

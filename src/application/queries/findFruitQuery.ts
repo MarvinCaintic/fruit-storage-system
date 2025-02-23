@@ -1,5 +1,6 @@
 import {nonNull, queryField, stringArg} from 'nexus';
 import fruitRepository from "../../infrastructure/repositories/FruitRepository";
+import fruitService from "../services/FruitService";
 
 // Query to find a fruit by name
 const findFruitQuery = queryField('findFruit', {
@@ -8,9 +9,7 @@ const findFruitQuery = queryField('findFruit', {
         name: nonNull(stringArg()),
     },
     resolve: async (_parent, { name }) => {
-        const fruit = await fruitRepository.findByName(name);
-        if (!fruit) throw new Error('Fruit not found.');
-        return fruit;
+        return await fruitService.findByName(name)
     },
 });
 

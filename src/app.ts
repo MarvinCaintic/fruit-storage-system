@@ -3,6 +3,7 @@ import { ApolloServer } from 'apollo-server';
 import schema from './interfaces/graphql/schema';
 import connectDB from './infrastructure/database/database';
 import FruitModel from "./domain/models/FruitModel";
+import './jobs/processOutbox';
 
 const startServer = async () => {
     await connectDB();

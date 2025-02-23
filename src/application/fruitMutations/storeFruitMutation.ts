@@ -1,6 +1,6 @@
 import {mutationField, stringArg, intArg, booleanArg, nonNull} from 'nexus';
-import fruitRepository from "../../infrastructure/repositories/FruitRepository";
 import FruitResponse from "../../interfaces/graphql/types/FruitResponse";
+import fruitService from "../services/FruitService";
 
 // Mutation to store fruits
 const storeFruitMutation = mutationField('storeFruitToFruitStorage', {
@@ -10,7 +10,7 @@ const storeFruitMutation = mutationField('storeFruitToFruitStorage', {
         amount: nonNull(intArg())
     },
     resolve: async (_parent, { name, amount }) => {
-        const savedFruit = await fruitRepository.storeFruit(name, amount);
+        const savedFruit = await fruitService.storeFruit(name, amount);
         return {
             message: 'Fruit stored successfully.',
             fruit: savedFruit

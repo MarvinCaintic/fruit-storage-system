@@ -1,6 +1,6 @@
-import {mutationField, stringArg, intArg, booleanArg, nonNull} from 'nexus';
-import fruitRepository from "../../infrastructure/repositories/FruitRepository";
+import {mutationField, stringArg, intArg, nonNull} from 'nexus';
 import FruitResponse from "../../interfaces/graphql/types/FruitResponse";
+import fruitService from "../services/FruitService";
 
 // Mutation to remove fruits
 const removeFruitMutation = mutationField('removeFruitFromFruitStorage', {
@@ -10,7 +10,7 @@ const removeFruitMutation = mutationField('removeFruitFromFruitStorage', {
         amount: nonNull(intArg())
     },
     resolve: async (_parent, { name, amount }) => {
-        const savedFruit = await fruitRepository.removeFruit(name, amount);
+        const savedFruit = await fruitService.removeFruit(name, amount);
         return {
             message: 'Fruit removed successfully.',
             fruit: savedFruit

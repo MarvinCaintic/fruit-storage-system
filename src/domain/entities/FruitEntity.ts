@@ -1,30 +1,35 @@
 class FruitEntity {
-    name: string;
-    description: string;
-    limitOfFruitToBeStored: number;
-    amount: number;
-    createdAt?: Date;
+    private constructor(
+        private name: string,
+        private description: string,
+        private limitOfFruitToBeStored: number,
+        private amount: number,
+        private createdAt?: Date
+    ) {}
 
-    constructor(
+    static createFruit(
         name: string,
         description: string,
         limitOfFruitToBeStored: number,
-        amount: number = 0,
+        amount?: number,
         createdAt?: Date
-    ) {
-        if (description.length > 30) {
-            throw new Error("Description cannot exceed 30 characters.");
+    ): FruitEntity {
+        if (!name || !description || limitOfFruitToBeStored <= 0) {
+            throw new Error('Invalid fruit data.');
         }
-        this.name = name;
-        this.description = description;
-        this.limitOfFruitToBeStored = limitOfFruitToBeStored;
-        this.amount = amount;
-        this.createdAt = createdAt;
+        if ((amount || 0) > limitOfFruitToBeStored) {
+            throw new Error("Amount exceeds the storage limit 1");
+        }
+        return new FruitEntity(name, description, limitOfFruitToBeStored, amount ?? 0, createdAt ?? new Date());
     }
 
-    hasStoredAmount(): boolean {
-        return this.amount > 0;
-    }
+    getName(): string { return this.name; }
+    getDescription(): string { return this.description; }
+    getLimit(): number { return this.limitOfFruitToBeStored; }
+    getAmount(): number { return this.amount; }
+    getCreatedAt(): Date | undefined { return this.createdAt; }
+
+    hasStoredAmount(): boolean { return this.amount > 0; }
 
     store(amountToStore: number): void {
         if (this.amount + amountToStore > this.limitOfFruitToBeStored) {
@@ -40,13 +45,19 @@ class FruitEntity {
         this.amount -= amountToRemove;
     }
 
-    update(newDescription: string, newLimit: number): void {
-        if (newDescription.length > 30) {
-            throw new Error("Description cannot exceed 30 characters.");
+    update(newDescription: string | null, newLimit: number | null): void {
+        // Update description if newDescription is not null
+        if (newDescription !== null) {
+            if (newDescription.length > 30) {
+                throw new Error("Description cannot exceed 30 characters.");
+            }
+            this.description = newDescription;
         }
 
-        this.description = newDescription;
-        this.limitOfFruitToBeStored = newLimit;
+        // Update limit if newLimit is not null
+        if (newLimit !== null) {
+            this.limitOfFruitToBeStored = newLimit;
+        }
     }
 }
 

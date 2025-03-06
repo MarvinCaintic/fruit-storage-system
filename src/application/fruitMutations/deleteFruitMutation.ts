@@ -1,4 +1,4 @@
-import {mutationField, stringArg, intArg, booleanArg, nonNull} from 'nexus';
+import {mutationField, stringArg, booleanArg, nonNull} from 'nexus';
 import fruitService from "../services/FruitService";
 
 // Mutation to delete fruits

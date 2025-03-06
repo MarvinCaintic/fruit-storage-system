@@ -1,8 +1,9 @@
 import FruitEntity from "../entities/FruitEntity";
+import fruitService from "../../application/services/FruitService";
 
 class FruitFactory {
-    createFruit(name: string, description: string, limitOfFruitToBeStored: number): FruitEntity {
-        return FruitEntity.createFruit(name, description, limitOfFruitToBeStored);
+    async createFruit(name: string, description: string, limitOfFruitToBeStored: number): Promise<FruitEntity> {
+        return await fruitService.createFruit(name, description, limitOfFruitToBeStored);
     }
 }
 

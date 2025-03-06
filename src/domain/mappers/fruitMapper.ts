@@ -1,13 +1,14 @@
 import FruitEntity from "../entities/FruitEntity";
+import {FruitDocument} from "../models/FruitModel";
 
 class FruitMapper {
-    static toDomain(raw: any): FruitEntity {
+    static toDomain(raw: FruitDocument): FruitEntity {
         return FruitEntity.createFruit(
             raw.name,
             raw.description,
             raw.limitOfFruitToBeStored,
             raw.amount || 0,
-            raw.createdAt
+            raw.createdAt || new Date() // Provide a default if createdAt is optional
         );
     }
 
@@ -22,4 +23,4 @@ class FruitMapper {
     }
 }
 
-export default FruitMapper
+export default FruitMapper;

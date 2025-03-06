@@ -1,6 +1,6 @@
 import fruitRepository from "../../infrastructure/repositories/FruitRepository";
 import FruitEntity from "../../domain/entities/FruitEntity";
-import eventEmitter from "../../utils/eventEmmiter";
+import eventEmitter from "../../shared/utils/eventEmmiter";
 
 class FruitService {
     async createFruit(name: string, description: string, limit: number, amount: number = 0): Promise<FruitEntity> {
@@ -11,7 +11,7 @@ class FruitService {
         }
 
         // Create domain entity (validations inside entity)
-        const fruit = FruitEntity.createFruit(name, description, limit, amount);
+        const fruit = await FruitEntity.createFruit(name, description, limit, amount);
 
         // Persist the fruit
         await fruitRepository.save(fruit);
@@ -64,7 +64,7 @@ class FruitService {
         return updatedFruit;
     }
 
-    async deleteFruit(name: string, forceDelete: boolean): Promise<void> {
+    async deleteFruit(name: string, forceDelete: boolean = false): Promise<void> {
         const fruit = await fruitRepository.findByName(name);
         if (!fruit) {
             throw new Error(`Fruit with name '${name}' not found.`);
@@ -78,7 +78,7 @@ class FruitService {
         eventEmitter.emit("fruitDeleted", name);
     }
 
-    async findByName(name: string): Promise<FruitEntity | null> {
+    async findFruit(name: string): Promise<FruitEntity | null> {
         const fruit = await fruitRepository.findByName(name);
         if (!fruit) throw new Error('Fruit not found.');
         return fruit;

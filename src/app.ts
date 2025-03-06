@@ -1,11 +1,13 @@
-// src/app.ts
-import { ApolloServer } from 'apollo-server';
-import schema from './interfaces/graphql/schema';
-import connectDB from './infrastructure/database/database';
+import { ApolloServer } from "apollo-server";
+import schema from "./interfaces/graphql/schema";
+import connectDB from "./infrastructure/database/database";
 import FruitModel from "./domain/models/FruitModel";
-import './jobs/processOutbox';
+import "./shared/cron/processOutbox";
+import {startOutboxProcessor} from "./shared/cron/processOutbox";
 
-const startServer = async () => {
+export let serverInstance: ApolloServer | null = null
+
+export const startServer = async () => {
     await connectDB();
 
     const server = new ApolloServer({
@@ -17,9 +19,26 @@ const startServer = async () => {
         }),
     });
 
-    server.listen().then(({ url }) => {
-        console.log(`🚀 Server ready at ${url}`);
-    });
+    const { url, server: httpServer } = await server.listen(); // Start the Apollo server
+
+    serverInstance = server; // Save server instance
+
+    console.log(`🚀 Server ready at ${url}`);
+
+    return httpServer; // Return the underlying HTTP server instance
 };
 
-startServer();
+// Function to stop the server
+export const stopServer = async () => {
+    if (serverInstance) {
+        await serverInstance.stop(); // Gracefully stop the Apollo server
+    }
+    // Ensure DB connection is closed
+    const mongoose = require('mongoose');
+    await mongoose.connection.close();
+};
+
+if (require.main === module) {
+    startServer();
+    startOutboxProcessor()
+}

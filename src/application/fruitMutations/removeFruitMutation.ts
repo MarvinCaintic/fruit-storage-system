@@ -11,9 +11,15 @@ const removeFruitMutation = mutationField('removeFruitFromFruitStorage', {
     },
     resolve: async (_parent, { name, amount }) => {
         const savedFruit = await fruitService.removeFruit(name, amount);
+
         return {
             message: 'Fruit removed successfully.',
-            fruit: savedFruit
+            fruit: {
+                name: savedFruit?.getName(),
+                description: savedFruit?.getDescription(),
+                limitOfFruitToBeStored: savedFruit?.getLimit(),
+                amount: savedFruit?.getAmount()
+            },
         };
     },
 });

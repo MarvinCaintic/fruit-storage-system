@@ -20,6 +20,9 @@ class FruitEntity {
         if ((amount || 0) > limitOfFruitToBeStored) {
             throw new Error("Amount exceeds the storage limit 1");
         }
+        if (description.length > 30) {
+            throw new Error("Description cannot exceed 30 characters.");
+        }
         return new FruitEntity(name, description, limitOfFruitToBeStored, amount ?? 0, createdAt ?? new Date());
     }
 

@@ -1,7 +1,6 @@
 import { mutationField, nonNull, stringArg, intArg } from 'nexus';
-import fruitFactory from '../../domain/factory/fruitFactory';
+import FruitFactory from '../../domain/factory/fruitFactory';
 import FruitResponse  from '../../interfaces/graphql/types/FruitResponse';
-import fruitService from "../services/FruitService";
 
 const createFruitMutation = mutationField('createFruitForFruitStorage', {
     type: FruitResponse,
@@ -11,12 +10,16 @@ const createFruitMutation = mutationField('createFruitForFruitStorage', {
         limitOfFruitToBeStored: nonNull(intArg()),
     },
     resolve: async (_parent, { name, description, limitOfFruitToBeStored }) => {
-        const fruit = fruitFactory.createFruit(name, description, limitOfFruitToBeStored);
-        const savedFruit = await fruitService.createFruit(fruit.getName(), fruit.getDescription(), fruit.getLimit(), fruit.getAmount());
-
+        const fruitFactory = new FruitFactory();
+        const savedFruit = await fruitFactory.createFruit(name, description, limitOfFruitToBeStored);
         return {
             message: 'Fruit created successfully.',
-            fruit: savedFruit,
+            fruit: {
+                name: savedFruit.getName(),
+                description: savedFruit.getDescription(),
+                limitOfFruitToBeStored: savedFruit.getLimit(),
+                amount: savedFruit.getAmount()
+            }
         };
     },
 });

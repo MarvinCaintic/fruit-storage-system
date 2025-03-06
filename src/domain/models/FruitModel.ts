@@ -1,7 +1,7 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 import OutboxEventModel from './OutboxEvent';
 
-interface FruitDocument extends Document {
+export interface FruitDocument extends Document {
     name: string;
     description: string;
     limitOfFruitToBeStored: number;
